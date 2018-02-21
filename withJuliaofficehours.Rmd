@@ -1,0 +1,41 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+require(tidyverse)
+wq <- read_csv("BayDeltaWQ.csv", col_names = TRUE, na = c("NA", "n/p", "n/a"), guess_max = 3000)
+
+my.fun <- function (k) {
+  ggplot(k, aes(x = `Conductance (EC)`)) + geom_histogram()
+}
+
+ my.list <- wq %>%
+  group_by(StationCode) %>%
+  nest()
+
+my.plots <- map(my.list$data,my.fun)
+names(my.plots) <- my.list[[1]] 
+
+lapply(my.plots,function(x){plot(x)})
+
+## trouble shoot ggsave function
+
+#lapply(my.plots,my.fun2 <- function(k){ggsave(file = paste0 (k,".png"),, device = "png")})
+
+
+#lapply(my.plots, my.fun2)
+
+# we know this works
+#pdf("all.pdf")
+#my.plots
+#dev.off()
+
+```
+
+
